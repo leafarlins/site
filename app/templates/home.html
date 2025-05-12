@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 class="text-center m-3">Initial page</h1>
+<h1 class="text-center m-3">leafarlins homepage</h1>
 
 <div class="row justify-content-md-center"><div class="col-12 col-sm-12 col-md-6 col-lg-4">
     {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
@@ -10,6 +10,55 @@
     </div>
 {% endfor %} {% endif %} {% endwith %}</div></div>
 
+{% set TEXT = {
+  "par1": {
+    "en": "Page under construction. You can visit my other apps.",
+    "pt": "Página em construção. Visite minhas outras páginas enquanto isso."
+  }
+} %}
+{% set APP = [ {
+  "name": "Gokopa do Mundo",
+  "desc": {
+    "en": 'An app that simulates a world cup, with a bet system, historic data from old championships and a iterative game called "Moedas Game"',
+    "pt": 'Um universo que simula copas do mundo, com um sistema de apostas, histórico de edições antigas, ranking e um jogo interativo chamado "Jogo das Moedas".'
+  },
+  "url": "gokopa.leafarlins.com"
+},{
+  "name": "Lang App",
+  "desc": {
+    "en": 'An app to study vocabulary from an input text, searching for meanings in a dictionary and building a flashcard to posterior study.',
+    "pt": 'Um app para buscar palavras em um texto e montar uma lista de vocabulários para estudo, criando um flashcard para estudar palavras marcadas depois.'
+  },
+  "url": "langapp.leafarlins.com"
+},{
+  "name": "Vote!",
+  "desc": {
+    "en": 'App to set up pools and with a simple link share, make other users vote and participate. Demonstrate pool result summary and votes.',
+    "pt": 'Aplicativo para votar em enquetes, com demonstrativo de resultados e votos. Compartilhe um link para convidar votantes.'
+  },
+  "url": "vote.leafarlins.com"
+}] %}
 
+<p class="text-center">{{ TEXT['par1'][lang] }}</p>
+
+<hr>
+
+<h2 class="text-center">Apps</h2>
+
+<div class="row justify-content-md-center">
+  {% for ap in APP %}
+  <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+      <div class="card mb-3">
+        <h3 class="card-header">{{ ap['name'] }}</h3>
+        <div class="card-body">
+          <p class="card-text">{{ ap['desc'][lang] }}</p>
+        </div>
+        <div class="card-body">
+          <a href="https://{{ ap['url'] }}" target="_blank" class="card-link">{{ ap['url'] }}</a>
+        </div>
+      </div>
+  </div>
+  {% endfor %}
+</div>
 
 {% endblock %}

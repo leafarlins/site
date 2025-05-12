@@ -4,17 +4,17 @@
     <script language="javascript">
 
         function toggle(toggletext,displaytext) {
-    
+
             var ele = document.getElementById(toggletext);
             var text = document.getElementById(displaytext);
-    
+
             if (ele.style.display == "block") {
-    
+
                 ele.style.display = "none";
                 text.innerHTML = "Show meaning";
             }
             else {
-    
+
                 ele.style.display = "block";
                 text.innerHTML = "Hide meaning";
             }
@@ -33,35 +33,76 @@
 
     </head>
     <body>
-      {% set lang = bdata['lang'] %}
-        <nav class="navbar .navbar-custom navbar-expand-md navbar-dark bg-dark">
-            <div class="container-fluid">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                  <li class="nav-item"><a class="nav-link{% if menu=='Home' %} active{% endif %}" href="/{{ lang }}">{{ bdata['menuitem']['home'][lang] }}</a></li>
-                  <li class="nav-item"><a class="nav-link{% if menu=='About' %} active{% endif %}" href="/{{ lang }}/about">{{ bdata['menuitem']['about'][lang] }}</a></li>
-                </ul>
-                
-                <div class="offcanvas-body">
-                  <ul class="navbar-nav justify-content-end">
-                    <li class="nav-item text-right">
-                      {% if session['username'] %}<a class="nav-link{% if menu=='Login' %} active{% endif %}" href="/logout">Logout</a>
-                      {% else %}<a class="nav-link{% if menu=='Login' %} active{% endif %}" href="/login">Login</a>
-                    {% endif %}</li>
-                </div>
-              </div>
+      {% set lang = menudata["lang"] %}
+      <nav class="navbar .navbar-custom navbar-expand-lg bg-primary">
+          <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link{% if menudata['active']=='home' %} active{% endif %}" href="/">{{ menudata['home'][lang] }}</a></li>
+                <li class="nav-item"><a class="nav-link{% if menudata['active']=='about' %} active{% endif %}" href="/about">{{ menudata['about'][lang] }}</a></li>
+              </ul>
+              <ul class="navbar-nav ms-md-auto">
+                <li class="nav-item dropdown" data-bs-theme="light">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="version-menu" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme">
+                    <span class="d-lg-none me-2">Bootstrap </span>
+                    <span>{{ lang }}</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a href="/set_language/en" class="dropdown-item d-flex align-items-center justify-content-between" aria-current="true">
+                        <span class="ms-2">english</span><i class="bi bi-check"></i>
+                      </a>
+                    </li>
+                    <!-- <li>
+                      <a href="/set_language/fr" class="dropdown-item d-flex align-items-center justify-content-between">
+                        <span class="ms-2">français</span>
+                      </a>
+                    </li> -->
+                    <li>
+                      <a href="/set_language/pt" class="dropdown-item d-flex align-items-center justify-content-between">
+                        <span class="ms-2">português</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="nav-item text-right">
+                  {% if session['username'] %}<a class="nav-link{% if menudata['active']=='login' %} active{% endif %}" href="/logout">Logout</a>
+                  {% else %}<a class="nav-link{% if menudata['active']=='login' %} active{% endif %}" href="/login">Login</a>
+                {% endif %}</li>
+              </ul>
+
+
+              <!-- <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ae</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">en</a>
+                      <a class="dropdown-item" href="#">pt</a>
+                      <a class="dropdown-item" href="#">fr</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">ens</a>
+                    </div>
+                  </li>
+                  <li class="nav-item text-right">
+                    {% if session['username'] %}<a class="nav-link{% if menu=='Login' %} active{% endif %}" href="/logout">Logout</a>
+                    {% else %}<a class="nav-link{% if menu=='Login' %} active{% endif %}" href="/login">Login</a>
+                  {% endif %}</li>
+              </div> -->
             </div>
-        </nav>     
-        <div class="container">
-        {% block content %}
-        {% endblock %}
-        </div>
-        
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-        
+          </div>
+      </nav>
+
+      <div class="container">
+      {% block content %}
+      {% endblock %}
+      </div>
+
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
     </body>
 </html>

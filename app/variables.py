@@ -1,10 +1,10 @@
 LANGNAMES = {
     'en': 'English',
     'fr': 'Français',
-    'es': 'Español'
+    'pt': 'Português'
 }
 
-SUPPORTED_LANGS = ['en','fr','es']
+SUPPORTED_LANGS = ['en','pt']
 
 SITE_HOME = {
     'title': {
@@ -30,4 +30,9 @@ MENUITEM = {
         'fr': 'À propos',
         'pt': 'Sobre'
     },
+    'contact': {
+        'en': 'Contact',
+        'fr': 'Contact',
+        'pt': 'Contato'
+    }
 }

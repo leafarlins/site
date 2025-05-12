@@ -6,11 +6,11 @@ edit_changelog() {
     LASTV=$(echo $LASTHEAD | grep -Po "compare/\K(v[0-9]\.[0-9]*\.[0-9]*)")
 
     sed -i "s/$LASTV\.\./v$VERSAO\.\./" CHANGELOG.md
-    sed -i "/^\[unreleased/a [${VERSAO/v/}]: https://github.com/leafarlins/lang/compare/$LASTV..$VERSAO/" CHANGELOG.md
+    sed -i "/^\[unreleased/a [${VERSAO/v/}]: https://github.com/leafarlins/$SITENAME/compare/$LASTV..$VERSAO/" CHANGELOG.md
     sed -i "/^## \[unreleased/a ## \[$VERSAO\] - $HOJE" CHANGELOG.md
     #sed -n '/## \[unreleased/,/^## /p' CHANGELOG.md | sed '/^## \[/d' > /tmp/tagnotes
 
-    sed -i "s/langapp v.*/langapp v$VERSAO/" app/templates/about.html
+    sed -i "s;leafarlins/$SITENAME v.*;leafarlins/$SITENAME v$VERSAO/" app/templates/about.html
 }
 
 commit_tag() {
@@ -26,17 +26,18 @@ commit_tag() {
 
 docker_build() {
     echo "Construindo container"
-    docker build -t leafarlins/lang:v$VERSAO .
-    docker build -t leafarlins/lang:latest .
-    docker push leafarlins/lang:v$VERSAO
-    docker push leafarlins/lang:latest
+    docker build -t leafarlins/$SITENAME:v$VERSAO .
+    docker build -t leafarlins/$SITENAME:latest .
+    docker push leafarlins/$SITENAME:v$VERSAO
+    docker push leafarlins/$SITENAME:latest
 }
 
 VERSAO=$1
 HOJE=$(date "+%Y-%m-%d")
+SITENAME="site"
 
 echo "Building version $VERSAO"
 
+docker_build
 edit_changelog
 commit_tag
-docker_build

@@ -24,9 +24,12 @@
                     <input type="password" name=senha id="senha" class="form-control m-3" placeholder="Senha" required>
                 </div>
             </div>
+            <input type="hidden" id="next" name="next" value="{{ request.args.get('next') }}">
             <button class="w-40 btn btn-lg btn-primary m-3" type="submit">Login</button>
         </form>
     </main>
+
+    <p class="text-center m-3">{{ content['nouser'][lang] }} - <a href="createuser">{{ content['createuser'][lang] }}</a></p>
 
 </div>
 {% endblock %}

@@ -1,46 +1,68 @@
 import json
-from flask import Blueprint, current_app, make_response, render_template, session, request, url_for, flash
-import pymongo
-from werkzeug.utils import redirect
-from werkzeug.security import check_password_hash
-from pwgen import pwgen
-from app.routes.backend import get_text, get_user_flashcards, set_to_known, set_to_study, get_flashcard, update_fc
+from flask import Blueprint, current_app, make_response, redirect, render_template, session, request, url_for, flash
 from ..extentions.database import mongo
 from ..cache import cache
-from data.variables import *
+from app.variables import *
+from app.data.maincontent import *
 
 site = Blueprint('site',__name__)
 
-#app.logger.debug('This is a DEBUG message')
-#app.logger.info('This is an INFO message')
-#app.logger.warning('This is a WARNING message')
-#app.logger.error('This is an ERROR message')
+#current_app.logger.debug info warning error
 
-def basicdata(menu,lang):
-    if lang in SUPPORTED_LANGS:
-        return {
-            'menuitem': MENUITEM,
-            'menu': menu,
-            'lang': lang
-        }
+def getLang():
+    cooklang = request.cookies.get("preflang")
+    if cooklang is not None:
+        current_app.logger.debug(f'Getting preferred language {cooklang} from cookie')
+        if cooklang not in SUPPORTED_LANGS:
+            cooklang = 'en'
     else:
-        flash(f'Language {lang} not valid','danger')
-        return redirect(url_for('site.home'))
+        # Check preferred language
+        preferred_languages = request.accept_languages
+        cooklang = preferred_languages.best_match(SUPPORTED_LANGS)
+        current_app.logger.debug(f'Getting preferred language {cooklang} from request')
+        if cooklang is None:
+            current_app.logger.debug('Setting default preferred lang en')
+            cooklang = 'en'
+    return cooklang
+
+# def basicdata(menu,lang):
+#     if lang in SUPPORTED_LANGS:
+#         return {
+#             'menuitem': MENUITEM,
+#             'menu': menu,
+#             'lang': lang
+#         }
+#     else:
+#         flash(f'Language {lang} not valid','danger')
+#         return redirect(url_for('site.home'))
+
+def gera_menudata(menu):
+    menudata = MENUITEM
+    menudata['active'] = menu
+    menudata["lang"] = getLang()
+    return menudata
+
+@site.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in SUPPORTED_LANGS:
+        response = make_response(redirect(request.referrer or '/'))
+        response.set_cookie('preflang', lang)
+        return response
+    else:
+        return redirect('/')
+
 
 @site.route('/')
 def home():
-    cook = request.cookies.get("preflang")
-    if cook not in SUPPORTED_LANGS:
-        cook = 'en'
-    resp = make_response(render_template("home.html",bdata=basicdata('Home',cook)))
-    resp.set_cookie('preflang',cook)
+    resp = make_response(render_template("home.html",menudata=gera_menudata("home")))
+    #resp.set_cookie('preflang',cook)
     return resp
 
-@site.route('/<lang>')
-def homelang(lang):
-    return render_template("home.html",bdata=basicdata('Home',lang))
+# @site.route('/<lang>')
+# def homelang(lang):
+#     return render_template("home.html",bdata=basicdata('Home',lang))
 
 @cache.cached(timeout=3600)
-@site.route('/<lang>/about')
-def about(lang):
-    return render_template("about.html",bdata=basicdata('About',lang))
+@site.route('/about')
+def contact():
+    return render_template("about.html",menudata=gera_menudata('about'),content=ABOUT)
