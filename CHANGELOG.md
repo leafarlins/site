@@ -4,14 +4,9 @@ All notable changes to this project will be documented in this file. Based on [K
 
 ## [unreleased]
 ## [0.1.0] - 2025-05-12
-## [0.1.0] - 2025-05-12
-
-## [0.1.0]
 
 ### Added
 - Initial site
 
 [unreleased]: https://github.com/leafarlins/site/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/leafarlins/site/compare/v0.1.0..0.1.0/
-[0.1.0]: https://github.com/leafarlins/site/compare/v0.1.0..0.1.0/
 [0.1.0]: https://github.com/leafarlins/site/releases/tag/v0.1.0

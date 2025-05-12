@@ -26,10 +26,10 @@ commit_tag() {
 
 docker_build() {
     echo "Construindo container"
-    docker build -t leafarlins/$SITENAME:v$VERSAO .
+    docker build -t leafarlins/$SITENAME:v$VERSAO . || exit 1
     docker build -t leafarlins/$SITENAME:latest .
-    docker push leafarlins/$SITENAME:v$VERSAO
-    docker push leafarlins/$SITENAME:latest
+    docker push leafarlins/$SITENAME:v$VERSAO || exit 1
+    docker push leafarlins/$SITENAME:latest || exit 1
 }
 
 VERSAO=$1
@@ -39,5 +39,5 @@ SITENAME="site"
 echo "Building version $VERSAO"
 
 docker_build
-edit_changelog
+#edit_changelog
 commit_tag
