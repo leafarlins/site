@@ -14,14 +14,18 @@ edit_changelog() {
 }
 
 commit_tag() {
-    echo "Committing"
-    git add CHANGELOG.md
-    git add app/templates/about.html
-    git commit -m "release v$VERSAO"
-    git tag v$VERSAO
-    git push --tags
-    #git push origin master
-
+    git tag | grep -P "^v$VERSAO$"
+    if [ $? -eq 0 ]; then
+      echo "Tag v$VERSAO exists."
+    else
+      edit_changelog
+      echo "Committing"
+      git add CHANGELOG.md
+      git add app/templates/about.html
+      git commit -m "release v$VERSAO"
+      git tag v$VERSAO
+      git push --tags
+    fi
 }
 
 docker_build() {
@@ -39,5 +43,4 @@ SITENAME="site"
 echo "Building version $VERSAO"
 
 docker_build
-#edit_changelog
 commit_tag

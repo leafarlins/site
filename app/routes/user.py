@@ -109,7 +109,7 @@ def login():
         username = request.form.get('usuario')
         password = request.form.get('senha')
         userFound = mongo.db.users.find_one({"username": username})
-        next_url = request.form.get('next')
+        next_url = request.form.get('next') if request.form.get('next') != "None" else ""
         FLASH = {
             "welcome" : {
                 "en" : "Welcome",
@@ -155,22 +155,22 @@ def login():
                     )
                     if next_url:
                         current_app.logger.debug(f"Login done, next url link: {next_url}")
-                        return redirect(f"{next_url}#token={token}")
+                        return redirect(f"{next_url}?token={token}")
                     else:
                         flash(f'{FLASH["welcome"][lang]}, {validUser}','success')
                         return redirect(url_for('site.home'))
                 else:
-                    flash(f"{FLASH["logfail"][lang]}","danger")
+                    flash(f'{FLASH["logfail"][lang]}',"danger")
                     current_app.logger.info(f"User {validUser} login failed with wrong password")
             else:
                 if validEmailC:
                     flash(f'{FLASH["unotactive"][lang]}','warning')
                     current_app.logger.info(f"User {validUser} not active, login failed")
                 else:
-                    flash(f"{FLASH["checkemail"][lang]}",'warning')
+                    flash(f"{FLASH['checkemail'][lang]}",'warning')
                     current_app.logger.info(f"User {validUser} email not confirmed")
         else:
-            flash(f"{FLASH["logfail"][lang]}","danger")
+            flash(f"{FLASH['logfail'][lang]}","danger")
             current_app.logger.warn(f"User {username} not found in database",'danger')
 
     return render_template("usuarios/login.html",menudata=gera_menudata("login"),content=LOGIN,lang=lang)

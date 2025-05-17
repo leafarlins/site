@@ -17,8 +17,13 @@ def create_app(config_object="app.settings"):
     app.register_blueprint(emailCommands)
     LOGLEVEL = app.config.get('LOGLEVEL')
     app.logger.setLevel(LOGLEVEL)
-    
+    app.config.update(
+        SESSION_COOKIE_DOMAIN=app.config.get('DOMAIN'),
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_SAMESITE="Lax"
+    )
+
     cache.init_app(app)
     database.init_app(app)
-    
+
     return app
